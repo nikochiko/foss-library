@@ -1,7 +1,7 @@
-from foss_library.database import db
+from foss_library.database import CRUDMixin, db
 
 
-class Book(db.Model):
+class Book(db.Model, CRUDMixin):
     """The Book model"""
 
     __tablename__ = "books"

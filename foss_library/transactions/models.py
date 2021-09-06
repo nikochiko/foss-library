@@ -1,9 +1,9 @@
 from sqlalchemy import func
 
-from foss_library.database import db
+from foss_library.database import CRUDMixin, db
 
 
-class Transaction(db.Model):
+class Transaction(db.Model, CRUDMixin):
     __tablename__ = "transactions"
 
     id = db.Column(db.Integer, primary_key=True)
