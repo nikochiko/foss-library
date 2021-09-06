@@ -1,0 +1,17 @@
+alembic==1.7.1
+click==8.0.1
+environs==9.3.3
+Flask==2.0.1
+Flask-Migrate==3.1.0
+Flask-SQLAlchemy==2.5.1
+Flask-WTF==0.15.1
+itsdangerous==2.0.1
+Jinja2==3.0.1
+Mako==1.1.5
+MarkupSafe==2.0.1
+marshmallow==3.13.0
+psycopg2-binary==2.9.1
+python-dotenv==0.19.0
+SQLAlchemy==1.4.23
+Werkzeug==2.0.1
+WTForms==2.3.3
