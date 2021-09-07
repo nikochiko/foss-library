@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container d-flex">
+      <h1 class="fs-2 me-auto">Create new book</h1>
+    </div>
+</div><!-- /.jumbotron -->
+
+<form>
+  <div class="form-group">
+    {{ form.title.label("Title") }}
+    {{ form.title(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.isbn.label("ISBN") }}
+    {{ form.isbn(class="form-control") }}
+    <small>10 digit ISBN code (optional)</small>
+  </div>
+  <div class="form-group">
+    {{ form.isbn13.label("ISBN 13") }}
+    {{ form.isbn13(class="form-control") }}
+    <small>13 digit ISBN code (required)</small>
+  </div>
+  <div class="form-group">
+    {{ form.authors.label("Authors (separated by '/')") }}
+    {{ form.authors(class="form-control", placeholder="Rumi/A.J. Arberry") }}
+  </div>
+  <div class="form-group">
+    {{ form.language_code.label }}
+    {{ form.language_code(class="form-control", placeholder="eng") }}
+  </div>
+  <div class="form-group">
+    {{ form.num_pages.label }}
+    {{ form.num_pages(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.publication_date.label }}
+    {{ form.publication_date(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.publisher_name.label("Publisher") }}
+    {{ form.publisher_name(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.average_rating.label }}
+    {{ form.average_rating(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.ratings_count.label }}
+    {{ form.ratings_count(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.text_reviews_count.label }}
+    {{ form.text_reviews_count(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.total_stock.label }}
+    {{ form.total_stock(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.rent_per_day.label }}
+    {{ form.rent_per_day(class="form-control") }}
+    <small>Default: 1 Rs per day</small>
+  </div>
+  <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+{% endblock %}
+
