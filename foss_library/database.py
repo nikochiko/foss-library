@@ -14,6 +14,15 @@ class CRUDMixin(object):
         instance = cls(**kwargs)
         return instance.save()
 
+    @classmethod
+    def get_or_create(cls, **kwargs):
+        """Get an object with the given kwargs from DB, or create one"""
+        instance = cls.query.filter_by(**kwargs).first()
+        if instance:
+            return instance
+
+        return cls.create(**kwargs)
+
     def update(self, commit=True, **kwargs):
         """Update specific fields of a record."""
         for attr, value in kwargs.items():
