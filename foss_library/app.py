@@ -1,6 +1,6 @@
 from flask import Flask
 
-from foss_library import books, members #, transactions
+from foss_library import books, members , transactions
 from foss_library.extensions import csrf_protect, db, migrate
 
 
@@ -17,6 +17,6 @@ def create_app(config_object="foss_library.settings"):
     # initialize blueprints
     app.register_blueprint(books.views.blueprint)
     app.register_blueprint(members.views.blueprint)
-    # app.register_blueprint(transactions.views.blueprint)
+    app.register_blueprint(transactions.views.blueprint)
 
     return app
