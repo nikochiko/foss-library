@@ -4,6 +4,8 @@ from foss_library.database import CRUDMixin, db
 
 
 class Member(db.Model, CRUDMixin):
+    __tablename__ = "members"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
 
