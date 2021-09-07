@@ -1,5 +1,7 @@
 from foss_library.database import CRUDMixin, db
 
+from foss_library.transactions.models import Transaction
+
 
 class Book(db.Model, CRUDMixin):
     """The Book model"""
@@ -44,8 +46,12 @@ class Book(db.Model, CRUDMixin):
     )
 
     @property
+    def unreturned_stock(self):
+        """Number of unreturned books"""
+        unreturned_books = Transaction.query.filter_by(book_id=self.id, returned_at=None).count()
+        return unreturned_books
+
+    @property
     def available_stock(self):
         """Returns the available stock for a Book"""
-        # total stock - unreturned books
-        unreturned_books = self.transactions.query().filter_by(returned_at=None).count()
-        return self.total_stock - unreturned_books
+        return self.total_stock - self.unreturned_stock
