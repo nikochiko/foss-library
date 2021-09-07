@@ -1,3 +1,47 @@
-from flask import Blueprint
+from math import ceil
 
-blueprint = Blueprint("books", __name__)
+from flask import Blueprint, flash, redirect, render_template, request
+from sqlalchemy import desc
+
+from .forms import BookForm
+from .models import Book
+
+blueprint = Blueprint("books", __name__, url_prefix="/books", static_folder="../static")
+
+
+@blueprint.route("/", methods=("GET",))
+def list_books():
+    """List books"""
+    books_on_each_page = 20
+
+    total_pages = ceil(Book.query.count() / books_on_each_page)
+
+    # get page from request args, e.g. /books?page=1
+    page = request.args.get("page", 1)
+    page = int(page)
+
+    if page > total_pages:
+        flash(f"Page {page} is out of range", "error")
+        return redirect("/books/")
+
+    # set limit and offset for SQL query
+    limit = books_on_each_page
+    offset = (page - 1) * books_on_each_page
+
+    books = Book.query.order_by(desc(Book.created_at)).limit(limit).offset(offset).all()
+    return render_template("books/list_books.html", books=books, current_page=page, total_pages=total_pages)
+
+
+@blueprint.route("/create", methods=("GET", "POST"))
+def create_book():
+    """Create a new book"""
+    form = BookForm()
+    if form.validate_on_submit():
+        book = Book()
+        form.populate_obj(book)
+        book.save()
+        flash("Book created successfully!", "success")
+        return redirect("/books/")
+
+    return render_template("books/create_book.html", form=form)
+
