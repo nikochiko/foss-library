@@ -19,6 +19,9 @@ class Book(db.Model, CRUDMixin):
     text_reviews_count = db.Column(db.Integer)
     publication_date = db.Column(db.DateTime)
     publisher_name = db.Column(db.String(255))
+    total_stock = db.Column(db.Integer, default=1)
+    # default rent per day to 1 Rs per day
+    rent_per_day = db.Column(db.Integer, default=1)
 
     # timestamps
     created_at = db.Column(db.DateTime, default=db.func.now())
