@@ -42,3 +42,10 @@ class Book(db.Model, CRUDMixin):
         db.func.lower(title).label("lowercase_publisher_name"),
         postgresql_ops={"lowercase_publisher_name": "varchar_pattern_ops"},
     )
+
+    @property
+    def available_stock(self):
+        """Returns the available stock for a Book"""
+        # total stock - unreturned books
+        unreturned_books = self.transactions.query().filter_by(returned_at=None).count()
+        return self.total_stock - unreturned_books
