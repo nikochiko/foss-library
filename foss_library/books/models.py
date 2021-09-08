@@ -8,8 +8,8 @@ class Book(db.Model, CRUDMixin):
 
     __tablename__ = "books"
     id = db.Column(db.Integer, primary_key=True)
-    isbn = db.Column(db.String(10), index=True)
-    isbn13 = db.Column(db.String(13), index=True)
+    isbn = db.Column(db.String(10), unique=True, nullable=False, index=True)
+    isbn13 = db.Column(db.String(13), unique=True, nullable=False, index=True)
     # the longest book title is over 26000 characters! won't use VARCHAR(X) here
     title = db.Column(db.Text)
     authors = db.Column(db.Text)

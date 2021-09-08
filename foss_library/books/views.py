@@ -3,6 +3,7 @@ from math import ceil
 from flask import Blueprint, flash, redirect, render_template, request
 from sqlalchemy import desc
 
+from foss_library.utils import flash_form_errors
 from .forms import BookForm
 from .models import Book
 
@@ -43,5 +44,6 @@ def create_book():
         flash("Book created successfully!", "success")
         return redirect("/books/")
 
+    flash_form_errors(form)
     return render_template("books/create_book.html", form=form)
 

@@ -1,20 +1,25 @@
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, IntegerField, StringField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import InputRequired, Length, NumberRange, Optional
+
+from foss_library.utils import UniqueCheck
+from .models import Book
 
 
 class BookForm(FlaskForm):
-    title = StringField("title", validators=[DataRequired()])
-    isbn = StringField("isbn", validators=[Length(min=10, max=10)])
-    isbn13 = StringField("isbn", validators=[DataRequired(), Length(min=13, max=13)])
-    authors = StringField("authors", validators=[DataRequired()])
-    language_code = StringField(validators=[Length(max=7)])
-    num_pages = IntegerField(validators=[DataRequired(), NumberRange(min=0)])
-    publication_date = DateField(validators=[DataRequired()])
-    publisher_name = StringField(validators=[DataRequired()])
-    average_rating = DecimalField(validators=[NumberRange(min=0, max=5)])
-    ratings_count = IntegerField(validators=[NumberRange(min=0)])
-    text_reviews_count = IntegerField(validators=[NumberRange(min=0)])
-    total_stock = IntegerField(validators=[DataRequired(), NumberRange(min=0)])
-    rent_per_day = IntegerField(validators=[NumberRange(min=0)])
+    _model = Book
+
+    title = StringField("Title", validators=[InputRequired()])
+    isbn = StringField("ISBN 10", validators=[Optional(), Length(min=10, max=10), UniqueCheck()])
+    isbn13 = StringField("ISBN 13", validators=[Optional(), InputRequired(), Length(min=13, max=13), UniqueCheck()])
+    authors = StringField("Authors", validators=[InputRequired()])
+    language_code = StringField(validators=[Optional(), Length(max=7)])
+    num_pages = IntegerField(validators=[InputRequired(), NumberRange(min=0)])
+    publication_date = DateField(validators=[InputRequired()])
+    publisher_name = StringField(validators=[InputRequired()])
+    average_rating = DecimalField(validators=[Optional(), NumberRange(min=0, max=5)])
+    ratings_count = IntegerField(validators=[Optional(), NumberRange(min=0)])
+    text_reviews_count = IntegerField(validators=[Optional(), NumberRange(min=0)])
+    total_stock = IntegerField(default=1, validators=[InputRequired(), NumberRange(min=0)])
+    rent_per_day = IntegerField(default=1, validators=[Optional(), NumberRange(min=0)])
