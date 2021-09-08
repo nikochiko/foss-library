@@ -1,75 +1,72 @@
 {% extends "layout.html" %}
 {% block content %}
-<!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
-  <div class="container justify-elements-center mx-auto">
-    <h1 class="fs-2 me-auto">Create new book 📖</h1>
-    <form class="row g-3" action="{{ url_for("books.create_book") }}" method="POST">
-      {{ form.csrf_token }}
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.title.label(class="form-label") }}</b>
-        {{ form.title(class="form-control") }}
-      </div>
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.authors.label(class="form-label") }}</b>
-        {{ form.authors(class="form-control", placeholder="Rumi/A.J. Arberry") }}
-      </div>
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.publisher_name.label(class="form-label") }}</b>
-        {{ form.publisher_name(class="form-control") }}
-      </div>
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.publication_date.label(class="form-label") }}</b>
-        {{ form.publication_date(class="form-control") }}
-      </div>
-      <div class="form-group col-md-3 py-1">
-        <b>{{ form.isbn.label(class="form-label") }}</b>
-        {{ form.isbn(class="form-control") }}
-        <small>
-          10 digit ISBN code
-          (<a href="https://www.isbn.org/isbn_converter" target="_blank">https://www.isbn.org/isbn_converter</a>)
-        </small>
-      </div>
-      <div class="form-group col-md-3 py-1">
-        <b>{{ form.isbn13.label(class="form-label") }}</b>
-        {{ form.isbn13(class="form-control") }}
-        <small>
-          13 digit ISBN code
-          (<a href="https://www.isbn.org/isbn_converter" target="_blank">https://www.isbn.org/isbn_converter</a>)
-        </small>
-      </div>
-      <div class="form-group col-md-3 py-1">
-        <b>{{ form.language_code.label(class="form-label") }}</b>
-        {{ form.language_code(class="form-control", placeholder="eng") }}
-      </div>
-      <div class="form-group col-md-3 py-1">
-        <b>{{ form.num_pages.label("Pages", class="form-label") }}</b>
-        {{ form.num_pages(class="form-control") }}
-      </div>
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.total_stock.label("Stock", class="form-label") }}</b>
-        {{ form.total_stock(class="form-control") }}
-      </div>
-      <div class="form-group col-md-6 py-1">
-        <b>{{ form.rent_per_day.label("Rent", class="form-label") }}</b>
-        {{ form.rent_per_day(class="form-control") }}
-        <small>In Rs per day</small>
-      </div>
-      <div class="form-group col-md-4 py-1">
-        <b>{{ form.average_rating.label(class="form-label") }}</b>
-        {{ form.average_rating(class="form-control") }}
-      </div>
-      <div class="form-group col-md-4 py-1">
-        <b>{{ form.ratings_count.label(class="form-label") }}</b>
-        {{ form.ratings_count(class="form-control") }}
-      </div>
-      <div class="form-group col-md-4 py-1">
-        <b>{{ form.text_reviews_count.label(class="form-label") }}</b>
-        {{ form.text_reviews_count(class="form-control") }}
-      </div>
-      <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
-  </div>
+<div class="container justify-elements-center mx-auto my-2 ">
+  <h1 class="fs-2 me-auto">Create new book 📖</h1>
+  <form class="row g-3" action="{{ url_for("books.create_book") }}" method="POST">
+    {{ form.csrf_token }}
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.title.label(class="form-label") }}</b>
+      {{ form.title(class="form-control") }}
+    </div>
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.authors.label(class="form-label") }}</b>
+      {{ form.authors(class="form-control", placeholder="Rumi/A.J. Arberry") }}
+    </div>
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.publisher_name.label(class="form-label") }}</b>
+      {{ form.publisher_name(class="form-control") }}
+    </div>
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.publication_date.label(class="form-label") }}</b>
+      {{ form.publication_date(class="form-control") }}
+    </div>
+    <div class="form-group col-md-3 py-1">
+      <b>{{ form.isbn.label(class="form-label") }}</b>
+      {{ form.isbn(class="form-control") }}
+      <small>
+        10 digit ISBN code
+        (<a href="https://www.isbn.org/isbn_converter" target="_blank">https://www.isbn.org/isbn_converter</a>)
+      </small>
+    </div>
+    <div class="form-group col-md-3 py-1">
+      <b>{{ form.isbn13.label(class="form-label") }}</b>
+      {{ form.isbn13(class="form-control") }}
+      <small>
+        13 digit ISBN code
+        (<a href="https://www.isbn.org/isbn_converter" target="_blank">https://www.isbn.org/isbn_converter</a>)
+      </small>
+    </div>
+    <div class="form-group col-md-3 py-1">
+      <b>{{ form.language_code.label(class="form-label") }}</b>
+      {{ form.language_code(class="form-control", placeholder="eng") }}
+    </div>
+    <div class="form-group col-md-3 py-1">
+      <b>{{ form.num_pages.label("Pages", class="form-label") }}</b>
+      {{ form.num_pages(class="form-control") }}
+    </div>
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.total_stock.label("Stock", class="form-label") }}</b>
+      {{ form.total_stock(class="form-control") }}
+    </div>
+    <div class="form-group col-md-6 py-1">
+      <b>{{ form.rent_per_day.label("Rent", class="form-label") }}</b>
+      {{ form.rent_per_day(class="form-control") }}
+      <small>In Rs per day</small>
+    </div>
+    <div class="form-group col-md-4 py-1">
+      <b>{{ form.average_rating.label(class="form-label") }}</b>
+      {{ form.average_rating(class="form-control") }}
+    </div>
+    <div class="form-group col-md-4 py-1">
+      <b>{{ form.ratings_count.label(class="form-label") }}</b>
+      {{ form.ratings_count(class="form-control") }}
+    </div>
+    <div class="form-group col-md-4 py-1">
+      <b>{{ form.text_reviews_count.label(class="form-label") }}</b>
+      {{ form.text_reviews_count(class="form-control") }}
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
 </div>
 
 {% endblock %}
