@@ -1,77 +1,102 @@
-{% extends "layout.html" %}
+{% extends "books/books_layout.html" %}
 {% block content %}
 <div class="container d-flex my-2">
   <h1 class="fs-2 me-auto">Available books</h1>
-  <a href="{{ url_for("books.create_book") }}">
-    <span class="fs-2 my-auto">
-      <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
-        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+
+  <a class="fs-2 mx-1" href="{{ url_for("books.list_books") }}">
+    <button class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
       </svg>
-    </span>
+    </button>
+  </a>
+
+  <span class="fs-2 mx-1">
+    <button class="btn btn-primary" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+    </button>
+    <div class="dropdown-menu w-75">
+      <form class="px-4 py-3">
+        <div class="form-group">
+          {{ search_form.title.label }}
+          {{ search_form.title(class="form-control") }}
+        </div>
+        <div class="form-group">
+          {{ search_form.author.label }}
+          {{ search_form.author(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+  </span>
+  <a class="fs-2 mx-1" href="{{ url_for("books.create_book") }}">
+    <button class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+      </svg>
+    </button>
   </a>
 </div>
+
+<hr />
+
 <div class="container">
-  <div class="row row-g-2">
-  {% for book in books %}
-    <div class="row row-g-2 my-2 bg-light rounded">
-      <div class="col-md-6 py-3">
-        <div class="row mb-2 fw-bold fs-5">
-          <div class="col col-12">
-            {{ book.title }}
-          </div>
-        </div>
-        <div class="row mt-2 fw-light fs-6">
+  <table class="table">
+    <thead>
+      <th class="align-middle text-center" scope="col">Book ID</th>
+      <th class="align-middle text-center" scope="col">Title</th>
+      <th class="align-middle text-center" scope="col">ISBN 13</th>
+      <th class="align-middle text-center" scope="col">Authors</th>
+      <th class="align-middle text-center" scope="col">Unreturned stock</th>
+      <th class="align-middle text-center" scope="col">Available stock</th>
+      <th class="align-middle text-center" scope="col">Total stock</th>
+      <th class="align-middle text-center" scope="col">Rent per day</th>
+      <th class="align-middle text-center" scope="col">Update</th>
+      <th class="align-middle text-center" scope="col">Delete</th>
+    </thead>
 
-          <div class="col col-6">
-            {{ book.authors|replace('/', ', ') }}
-          </div>
-
-          <div class="col col-6 d-flex justify-content-end align-items-baseline">
-            Published {{ book.publication_date.strftime('%d %B, %Y') }}&nbsp;
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
-  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-</svg>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-1 py-3 d-flex align-items-center justify-content-center">
-        <span class="fw-light">Pending: {{ book.unreturned_stock }}</span>
-      </div>
-      <div class="col-md-1 py-3 d-flex align-items-center justify-content-center">
-        <span class="fw-light">Available: {{ book.available_stock }}</span>
-      </div>
-      <div class="col-md-1 py-3 d-flex align-items-center justify-content-center">
-        <span class="fw-light">Total: {{ book.total_stock }}</span>
-      </div>
-      <div class="col-md"></div>
-      <div class="col-md-1 d-flex justify-content-center align-items-center">
-        <a class="text-decoration-none" href="{{ url_for("books.update_book", id=book.id) }}">
-          Update
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-          </svg>
-        </a>
-      </div>
-      <div class="col-md-1 d-flex justify-content-center align-items-center text-danger">
-        <form action="{{ url_for("books.delete_book", id=book.id) }}" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-          <button
-            type="submit"
-            class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center"
-            onclick="return confirm('Are you sure you want to delete the book?');"
-          >
-              Delete
-              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <th class="align-middle text-center" scope="row">{{ book.id }}</th>
+        <td class="align-middle text-center"><a href="{{ url_for("books.show_book", id=book.id) }}">{{ book.title }}</a></td>
+        <td class="align-middle text-center">{{ book.isbn13 }}</td>
+        <td class="align-middle text-center">{{ book.authors }}</td>
+        <td class="align-middle text-center">{{ book.unreturned_stock }}</td>
+        <td class="align-middle text-center">{{ book.available_stock }}</td>
+        <td class="align-middle text-center">{{ book.total_stock }}</td>
+        <td class="align-middle text-center">₹{{ book.rent_per_day }}</td>
+        <td class="align-middle text-center">
+          <a class="d-flex justify-content-center align-items-center text-decoration-none" href="{{ url_for("books.update_book", id=book.id) }}">
+            <button class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
               </svg>
-          </button>
-        </form>
-      </div>
-    </div>
-  {% endfor %}
+            </button>
+          </a>
+        </td>
+        <td class="align-middle text-center">
+          <form class="d-flex justify-content-center align-items-center text-danger" action="{{ url_for("books.delete_book", id=book.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button
+              type="submit"
+              class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0"
+              onclick="return confirm('Are you sure you want to delete this book?');"
+            >
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <nav aria-label="Page navigation" class="d-flex justify-content-center">

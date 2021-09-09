@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container d-flex my-2">
+  <h1 class="fs-2 me-auto">Recent transactions</h1>
+
+  <a class="fs-2 mx-1" href="{{ url_for("transactions.list_transactions") }}">
+    <button class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+      </svg>
+    </button>
+  </a>
+
+</div>
+
+<hr />
+
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <th class="align-middle text-center" scope="col">#</th>
+      <th class="align-middle text-center" scope="col">Book title</th>
+      <th class="align-middle text-center" scope="col">ISBN 13</th>
+      <th class="align-middle text-center" scope="col">Issuer name</th>
+      <th class="align-middle text-center" scope="col">Issued at</th>
+      <th class="align-middle text-center" scope="col">Returned</th>
+      <th class="align-middle text-center" scope="col">Dues</th>
+      <th class="align-middle text-center" scope="col">Details/Take returns</th>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+        <tr>
+          <th class="align-middle text-center" scope="row">
+            <a href="{{ url_for("transactions.show_transaction", id=transaction.id) }}">{{ transaction.id }}</a>
+          </th>
+          <td class="align-middle text-center">
+            <a class="text-reset" href="{{ url_for("books.show_book", id=transaction.book.id) }}">{{ transaction.book.title }}</td>
+          <td class="align-middle text-center">{{ transaction.book.isbn13 }}</td>
+          <td class="align-middle text-center">{{ transaction.member.name }}</td>
+          <td class="align-middle text-center">{{ transaction.borrowed_at.strftime("%d-%m-%Y %I:%M %p") }}</td>
+          <td class="align-middle text-center">
+            {% if transaction.is_completed %}
+            Yes
+            {% else %}
+            No
+            {% endif %}
+          </td>
+          <td class="align-middle text-center">₹{{ transaction.dues }}</td>
+
+          <td class="align-middle text-center">
+            <a href="{{ url_for("transactions.show_transaction", id=transaction.id) }}">Details</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<nav aria-label="Page navigation" class="d-flex justify-content-center">
+  <ul class="pagination pagination-md">
+    {% if current_page > 1 %}
+      <li class="page-item"><a class="page-link" href="{{ url_for("transactions.list_transactions", page=current_page-1) }}">Previous</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+    {% endif %}
+
+    {% for page_number in range(1, total_pages+1) %}
+      {% if page_number == current_page %}
+      <li class="page-item active"><a class="page-link selected" href="{{ url_for("transactions.list_transactions", page=page_number) }}">{{ page_number }}</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="{{ url_for("transactions.list_transactions", page=page_number) }}">{{ page_number }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if current_page < total_pages %}
+      <li class="page-item"><a class="page-link" href="{{ url_for("transactions.list_transactions", page=current_page+1) }}">Next</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

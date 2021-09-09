@@ -3,14 +3,32 @@ from math import ceil
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import desc
 
+from foss_library.database import db
 from foss_library.exceptions import FOSSLibraryBaseException
 from foss_library.utils import flash_form_errors
 from foss_library.members.models import Member
 from foss_library.transactions.models import Transaction
-from .forms import InitiateBookReturnForm, IssueBookForm, CreateBookForm, UpdateBookForm
+from .forms import InitiateBookReturnForm, IssueBookForm, CreateBookForm, SearchBookForm, UpdateBookForm
 from .models import Book
 
 blueprint = Blueprint("books", __name__, url_prefix="/books", static_folder="../static")
+
+
+def filter_books_by_request_args():
+    title = request.args.get("title")
+    author = request.args.get("author")
+
+    filters = []
+
+    if title:
+        title = title.lower()
+        filters.append(db.func.lower(Book.title).like(f"%{(title)}%"))
+
+    if author:
+        author = author.lower()
+        filters.append(db.func.lower(Book.authors).like(f"%{author}%"))
+
+    return Book.query.filter(*filters)
 
 
 @blueprint.route("/", methods=("GET",))
@@ -18,22 +36,25 @@ def list_books():
     """List books"""
     books_on_each_page = 20
 
-    total_pages = ceil(Book.query.count() / books_on_each_page)
-
     # get page from request args, e.g. /books?page=1
     page = request.args.get("page", 1)
     page = int(page)
-
-    if page > total_pages:
-        flash(f"Page {page} is out of range", "error")
-        return redirect("/books/")
 
     # set limit and offset for SQL query
     limit = books_on_each_page
     offset = (page - 1) * books_on_each_page
 
-    books = Book.query.order_by(desc(Book.created_at)).limit(limit).offset(offset).all()
-    return render_template("books/list_books.html", books=books, current_page=page, total_pages=total_pages)
+    books_query = filter_books_by_request_args()
+    books = books_query.limit(limit).offset(offset).all()
+
+    total_pages = ceil(books_query.count() / books_on_each_page)
+
+    if page > total_pages:
+        flash(f"Page {page} is out of range", "warning")
+
+    search_form = SearchBookForm(request.args)
+
+    return render_template("books/list_books.html", books=books, current_page=page, total_pages=total_pages, search_form=search_form)
 
 
 @blueprint.route("/create", methods=("GET", "POST"))
@@ -47,8 +68,10 @@ def create_book():
         flash("Book created successfully!", "success")
         return redirect("/books/")
 
+    search_form = SearchBookForm(request.args)
+
     flash_form_errors(form)
-    return render_template("books/create_book.html", form=form)
+    return render_template("books/create_book.html", form=form, search_form=search_form)
 
 
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
@@ -65,8 +88,10 @@ def update_book(id):
         flash("Book updated successfully!", "success")
         return redirect("/books/")
 
+    search_form = SearchBookForm(request.args)
+
     flash_form_errors(form)
-    return render_template("books/update_book.html", form=form)
+    return render_template("books/update_book.html", book=book, form=form, search_form=search_form)
 
 
 @blueprint.route("/delete/<int:id>", methods=("POST",))
@@ -88,8 +113,9 @@ def show_book(id):
 
     issue_form = IssueBookForm(obj=book)
     return_form = InitiateBookReturnForm(obj=book)
+    search_form = SearchBookForm(request.args)
 
-    return render_template("books/show_book.html", book=book, issue_form=issue_form, return_form=return_form)
+    return render_template("books/show_book.html", book=book, issue_form=issue_form, return_form=return_form, search_form=search_form)
 
 
 @blueprint.route("/issue/<int:id>", methods=("POST",))

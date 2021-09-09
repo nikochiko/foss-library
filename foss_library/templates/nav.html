@@ -10,6 +10,7 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto">
+
       {% if request.path == url_for('public.home') %}
       <li class="nav-item active">
       {% else %}
@@ -19,6 +20,7 @@
           <span class="sr-only">(current)</span>
         </a>
       </li>
+
       {% if request.path.startswith('/books') %}
       <li class="nav-item active">
       {% else %}
@@ -28,12 +30,23 @@
           <span class="sr-only">(current)</span>
         </a>
       </li>
+ 
       {% if request.path.startswith('/members') %}
       <li class="nav-item active">
       {% else %}
       <li class="nav-item">
       {% endif %}
         <a class="nav-link" href="{{ url_for('members.list_members') }}">Members
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+
+      {% if request.path.startswith('/transactions') %}
+      <li class="nav-item active">
+      {% else %}
+      <li class="nav-item">
+      {% endif %}
+        <a class="nav-link" href="{{ url_for('transactions.list_transactions') }}">Transactions
           <span class="sr-only">(current)</span>
         </a>
       </li>

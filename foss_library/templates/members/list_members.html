@@ -2,14 +2,17 @@
 {% block content %}
 <div class="container d-flex my-2">
   <h1 class="fs-2 me-auto">Members</h1>
-  <a href="{{ url_for("members.create_member") }}">
-    <span class="fs-2 my-auto">
-      <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
-        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+  <a class="fs-2 mx-1" href="{{ url_for("members.create_member") }}">
+    <button class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
       </svg>
-    </span>
+    </button>
   </a>
 </div>
+
+<hr />
+
 <div class="container">
   {% if not members %}
     <div class="jumbotron py-3">
@@ -79,7 +82,7 @@
     </div>
   {% else %}
     <table class="table table-hover">
-      <thead class="thead-light">
+      <thead>
         <th class="text-center" scope="col">#</th>
         <th class="text-center" scope="col">Name</th>
         <th class="text-center" scope="col">Email</th>
@@ -93,12 +96,12 @@
       {% for member in members %}
         <tr>
           <th class="align-middle text-center" scope="row">{{ member.id }}</th>
-          <td class="align-middle">{{ member.name }}</td>
-          <td class="align-middle">{{ member.email }}</td>
+          <td class="align-middle text-center">{{ member.name }}</td>
+          <td class="align-middle text-center"><a class="text-reset" href="mailto:{{ member.email }}">{{ member.email }}</a></td>
           <td class="align-middle text-center">{{ member.dues_paid }}</div></td>
           <td class="align-middle text-center">{{ member.unreturned_books|length }}</td>
           <td class="align-middle text-center">{{ member.outstanding_dues }}</td>
-          <td class="align-middle">
+          <td class="align-middle text-center">
             <a class="d-flex justify-content-center align-items-center text-decoration-none" href="{{ url_for("members.update_member", id=member.id) }}">
               <button class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

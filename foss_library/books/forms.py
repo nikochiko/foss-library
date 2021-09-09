@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, DecimalField, IntegerField, StringField
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateField, SearchField
 from wtforms.validators import InputRequired, Length, NumberRange, Optional
 
 from foss_library.utils import UniqueCheck
@@ -31,6 +31,11 @@ class CreateBookForm(BookForm):
 class UpdateBookForm(BookForm):
     isbn = StringField("ISBN 10", validators=[InputRequired(), Length(min=10, max=10)])
     isbn13 = StringField("ISBN 13", validators=[InputRequired(), Length(min=13, max=13)])
+
+
+class SearchBookForm(FlaskForm):
+    title = SearchField()
+    author = SearchField()
 
 
 class IssueBookForm(FlaskForm):

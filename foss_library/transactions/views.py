@@ -1,3 +1,5 @@
+from math import ceil
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import desc
 
@@ -13,12 +15,16 @@ def list_transactions():
     page = request.args.get("page", 1)
     page = int(page)
 
+    total_pages = ceil(Transaction.query.count() / transactions_on_each_page)
+    if page > total_pages:
+        flash(f"Page {page} is out of range", "warning")
+
     limit = transactions_on_each_page
     offset = (page - 1) * transactions_on_each_page
 
     transactions = Transaction.query.order_by(desc(Transaction.updated_at)).limit(limit).offset(offset).all()
 
-    return render_template("transactions/list_transactions.html", transactions=transactions, page=page)
+    return render_template("transactions/list_transactions.html", transactions=transactions, current_page=page, total_pages=total_pages)
 
 
 @blueprint.route("/<int:id>/show", methods=("GET",))
