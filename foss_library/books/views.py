@@ -63,3 +63,15 @@ def update_book(id):
 
     flash_form_errors(form)
     return render_template("books/update_book.html", form=form)
+
+
+@blueprint.route("/delete/<int:id>", methods=("POST",))
+def delete_book(id):
+    """Delete a book"""
+    book = Book.query.get(id)
+    if book is None:
+        return render_template("404.html"), 404
+
+    book.delete()
+    flash("Book deleted successfully!", "success")
+    return redirect("/books/")
