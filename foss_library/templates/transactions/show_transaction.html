@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mx-5">
+  <h1 class="fs-2">Transaction</h1>
+  <hr />
+  <div class="row row-g-2">
+    <div class="col col-9">
+      <p class="fs-5 fw-light">
+      <span class="">
+        <b>{{ transaction.book.title }}</b> issued to <b>{{ transaction.member.name }}</b> on {{ transaction.borrowed_at.strftime("%d %B, %Y at %H:%M") }}.
+      </span>
+      </p>
+    </div>
+
+    <div class="col col-3 d-flex justify-content-end">
+      <form class="form" action="{{ url_for("transactions.return_book", id=transaction.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if transaction.is_completed %}
+        <button class="btn btn-primary" type="submit"disabled>Take return</button>
+        {% else %}
+        <button class="btn btn-primary" type="submit" onclick="return confirm('Can you confirm that you have accepted the book and received a paymet of {{ dues }}?');">Take return</button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <div class="col col-12">
+    <table class="table table-striped mt-2">
+      <thead>
+        <th scope="col" colspan="2" class="text-center">
+          Details
+        </th>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">
+            Title
+          </th>
+          <td>
+            {{ transaction.book.title }}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            Author(s)
+          </th>
+          <td>
+            {{ transaction.book.authors|replace('/', ', ') }}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            ISBN
+          </th>
+          <td>
+            {{ transaction.book.isbn }}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            ISBN 13
+          </th>
+          <td>
+            {{ transaction.book.isbn13 }}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            Publisher
+          </th>
+          <td>
+            {{ transaction.book.publisher_name }}
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">
+            Publication date
+          </th>
+          <td>
+            {{ transaction.book.publication_date.strftime("%d %B, %Y") }}
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">
+            Issued by
+          </th>
+          <td>
+            {{ transaction.member.name }} ({{ transaction.member.email }})
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">
+            Returned
+          </th>
+          <td>
+            {% if transaction.is_completed %}
+            Yes
+            {% else %}
+            No
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">
+            Dues
+          </th>
+          <td>
+            ₹{{ transaction.dues }}
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+</div>
+{% endblock %}

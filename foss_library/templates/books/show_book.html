@@ -1,0 +1,208 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container d-flex my-2">
+  <h1 class="fs-2 me-auto">Book</h1>
+  <a href="{{ url_for("books.create_book") }}">
+    <span class="fs-2 my-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+      </svg>
+    </span>
+  </a>
+</div>
+<hr />
+<div class="container">
+  <div class="row row-g-2">
+    <div class="col col-9">
+      <h1 class="fs-3">{{ book.title }}</h1>
+    </div>
+    <div class="col col-3 d-flex justify-content-end">
+      <div class="dropdown show px-1">
+        <a class="btn btn-secondary dropdown-toggle" href="#start-return" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Take return
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+
+          <form class="px-4 py-1" action="{{ url_for("books.initiate_book_return", id=book.id) }}" method="POST">
+
+            {{ return_form.csrf_token }}
+
+            <div class="form-group row row-g-2">
+              {{ return_form.member_id.label("Member ID") }}
+              <span class="col col-12">
+                {{ return_form.member_id(class="form-control", placeholder="123") }}
+              </span>
+
+            </div>
+
+            <div class="form-group row row-g-2">
+              <span class="col col-6">
+                <button class="btn btn-primary" type="submit">Go</button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="dropdown show px-1">
+        <a class="btn btn-secondary dropdown-toggle" href="#issue-book" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Issue to
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+
+          <form class="px-4 py-1" action="{{ url_for("books.issue_book", id=book.id) }}" method="POST">
+
+            {{ issue_form.csrf_token }}
+
+            <div class="form-group row row-g-2">
+              {{ issue_form.member_id.label("Member ID") }}
+              <span class="col col-12">
+                {{ issue_form.member_id(class="form-control", placeholder="123") }}
+              </span>
+
+            </div>
+
+            <div class="form-group row row-g-2">
+              <span class="col col-6">
+                <button class="btn btn-primary" type="submit">
+                  Issue
+                </button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col col-1">
+      <span class="fw-bold">Authors: </span>
+    </div>
+    <div class="col col-8">
+      <span class="fw-light">{{ book.authors|replace('/', ', ') }}</span>
+    </div>
+    <div class="col col-3"></div>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="row row-g-2">
+
+    <div class="container py-2 col col-6">
+
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">ISBN </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.isbn }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">ISBN 13 </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.isbn13 }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">Number of Pages </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.num_pages }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">Language Code </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.language_code }}</span>
+        </div>
+      </div>
+ 
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">Publisher </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.publisher_name }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">Publication Date </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.publication_date.strftime("%d %B, %Y") }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container py-2 col col-6">
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">Available stock </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.available_stock }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">Total stock </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.total_stock }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">Unreturned stock </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.unreturned_stock }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">Average rating </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.average_rating }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2">
+        <div class="col col-6">
+          <span class="fw-bold">Ratings count </span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.ratings_count }}</span>
+        </div>
+      </div>
+
+      <div class="row py-2 bg-light">
+        <div class="col col-6">
+          <span class="fw-bold">Text reviews count</span>
+        </div>
+        <div class="col col-6">
+          <span class="font-monospace">{{ book.text_reviews_count }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,10 +1,13 @@
 from math import ceil
 
-from flask import Blueprint, flash, redirect, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import desc
 
+from foss_library.exceptions import FOSSLibraryBaseException
 from foss_library.utils import flash_form_errors
-from .forms import CreateBookForm, UpdateBookForm
+from foss_library.members.models import Member
+from foss_library.transactions.models import Transaction
+from .forms import InitiateBookReturnForm, IssueBookForm, CreateBookForm, UpdateBookForm
 from .models import Book
 
 blueprint = Blueprint("books", __name__, url_prefix="/books", static_folder="../static")
@@ -47,6 +50,7 @@ def create_book():
     flash_form_errors(form)
     return render_template("books/create_book.html", form=form)
 
+
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
 def update_book(id):
     """Update an existing book"""
@@ -75,3 +79,64 @@ def delete_book(id):
     book.delete()
     flash("Book deleted successfully!", "success")
     return redirect("/books/")
+
+
+@blueprint.route("/show/<int:id>", methods=("GET",))
+def show_book(id):
+    """Show a book"""
+    book = Book.query.get_or_404(id)
+
+    issue_form = IssueBookForm(obj=book)
+    return_form = InitiateBookReturnForm(obj=book)
+
+    return render_template("books/show_book.html", book=book, issue_form=issue_form, return_form=return_form)
+
+
+@blueprint.route("/issue/<int:id>", methods=("POST",))
+def issue_book(id):
+    """Issue a book"""
+    book = Book.query.get_or_404(id)
+
+    form = IssueBookForm(obj=book)
+    if form.validate_on_submit():
+        member_id = form.member_id.data
+        member = Member.query.get(member_id)
+        if member is None:
+            flash(f"Member with ID {member_id} doesn't exist. Please check your input", "warning")
+            return redirect(url_for("books.show_book", id=id))
+
+        try:
+            book.issue_to(member)
+        except FOSSLibraryBaseException as e:
+            flash(str(e), "danger")
+            return redirect(url_for("books.show_book", id=id))
+
+        flash("Book has been issued", "success")
+        return redirect("books.show_book", id=id)
+
+    return redirect(url_for("books.show_book", id=id))
+
+
+@blueprint.route("/initiate_return/<int:id>", methods=("POST",))
+def initiate_book_return(id):
+    """Initiate a book return"""
+    book = Book.query.get_or_404(id)
+
+    form = InitiateBookReturnForm(obj=book)
+    if form.validate_on_submit():
+        member_id = form.member_id.data
+        member = Member.query.get(member_id)
+        if member is None:
+            flash(f"Member with ID {member_id} doesn't exist. Please check your input", "warning")
+            return redirect(url_for("books.show_book", id=id))
+
+        txn = Transaction.query.filter_by(member=member, book=book, returned_at=None).first()
+        if txn is None:
+            flash(f"Member with ID {member_id} hasn't borrowed this book.")
+            return redirect(url_for("books.show_book", id=id))
+
+        return redirect(url_for("transactions.show_transaction", id=txn.id))
+
+    else:
+        flash_form_errors(form)
+        return redirect(url_for("books.show_book", id=id))

@@ -1,8 +1,10 @@
+import os
+
 from foss_library.database import CRUDMixin, db
 from foss_library.transactions.models import Transaction
 
 
-MAX_OUTSTANDING_DUES = 500
+MAX_OUTSTANDING_DUES = os.getenv("MAX_OUTSTANDING_DUES", 500)
 
 
 class Member(db.Model, CRUDMixin):

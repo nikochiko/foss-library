@@ -50,9 +50,6 @@ class Transaction(db.Model, CRUDMixin):
         Wrapped in a separate method because a few operations need to be done:
         * Set returned_at to now
         * Add amount due to member.dues_paid
-
-        Note: session isn't automatically committed here. That needs to be done
-        from the request handler (which Flask does automatically)
         """
         if self.is_completed:
             readable_returned_at = self.returned_at.strftime("%d %B, %Y")
@@ -61,7 +58,10 @@ class Transaction(db.Model, CRUDMixin):
         dues_paid_now = self.dues
         total_dues_paid_by_member = self.member.dues_paid + dues_paid_now
 
-        # not committing now because we want both of the next updates
+        # not committing directlyy because we want both of the next updates
         # to be part of a single transaction (for atomicity)
-        self.member.update(dues_paid=total_dues_paid_by_member, commit=False)
-        self.update(returned_at=db.func.now(), commit=False)
+        with db.session() as db_session:
+            self.member.update(dues_paid=total_dues_paid_by_member, commit=False)
+            self.update(returned_at=db.func.now(), commit=False)
+            db_session.add(self.member, self)
+            db_session.commit()

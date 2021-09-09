@@ -1,5 +1,6 @@
 from foss_library.database import CRUDMixin, db
 
+from foss_library.exceptions import OutOfStockError, OutstandingDuesError
 from foss_library.transactions.models import Transaction
 
 
@@ -55,3 +56,15 @@ class Book(db.Model, CRUDMixin):
     def available_stock(self):
         """Returns the available stock for a Book"""
         return self.total_stock - self.unreturned_stock
+
+    def issue_to(self, member):
+        """Tries to issue a book to a member"""
+        if self.available_stock < 1:
+            message = f"The book '{self.title}' is out of stock"
+            raise OutOfStockError(message)
+
+        if member.can_borrow_new_book:
+            txn = Transaction.create(book=self, member=member)
+            return txn
+        else:
+            raise OutstandingDuesError()

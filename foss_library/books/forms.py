@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DecimalField, IntegerField, StringField
+from wtforms import BooleanField, DecimalField, IntegerField, StringField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import InputRequired, Length, NumberRange, Optional
 
@@ -27,6 +27,15 @@ class CreateBookForm(BookForm):
     isbn = StringField("ISBN 10", validators=[InputRequired(), Length(min=10, max=10), UniqueCheck()])
     isbn13 = StringField("ISBN 13", validators=[InputRequired(), Length(min=13, max=13), UniqueCheck()])
 
+
 class UpdateBookForm(BookForm):
     isbn = StringField("ISBN 10", validators=[InputRequired(), Length(min=10, max=10)])
     isbn13 = StringField("ISBN 13", validators=[InputRequired(), Length(min=13, max=13)])
+
+
+class IssueBookForm(FlaskForm):
+    member_id = IntegerField(validators=[InputRequired()])
+
+
+class InitiateBookReturnForm(FlaskForm):
+    member_id = IntegerField(validators=[InputRequired()])
