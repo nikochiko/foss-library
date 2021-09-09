@@ -19,15 +19,21 @@
           <span class="sr-only">(current)</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://frappe.io/dev-hiring-test">About</a>
-      </li>
       {% if request.path.startswith('/books') %}
       <li class="nav-item active">
       {% else %}
       <li class="nav-item">
       {% endif %}
         <a class="nav-link" href="{{ url_for('books.list_books') }}">Books
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      {% if request.path.startswith('/members') %}
+      <li class="nav-item active">
+      {% else %}
+      <li class="nav-item">
+      {% endif %}
+        <a class="nav-link" href="{{ url_for('members.list_members') }}">Members
           <span class="sr-only">(current)</span>
         </a>
       </li>

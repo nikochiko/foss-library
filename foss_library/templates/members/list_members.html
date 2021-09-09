@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container d-flex my-2">
+  <h1 class="fs-2 me-auto">Members</h1>
+  <a href="{{ url_for("members.create_member") }}">
+    <span class="fs-2 my-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="32" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+      </svg>
+    </span>
+  </a>
+</div>
+<div class="container">
+  {% if not members %}
+    <div class="jumbotron py-3">
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <div class="row d-flex justify-content-center align-items-center">
+            <h1 class="fs-3">No one's here yet</h1>
+            <p>
+              <small>Start adding members using the + icon on the top right!</small>
+              <br />
+              <small>And enjoy the easter egg below :D</small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row mb-2">
+        <div class="col-4"></div>
+        <div class="col-4">
+          <div>
+            <h1>The Road Not Taken</h1>
+            <small><i>- Robert Frost</i></small>
+          </div>
+        </div>
+        <div class="col-4"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+          <p>
+            Two roads diverged in a yellow wood,<br />
+            And sorry I could not travel both<br />
+            And be one traveler, long I stood<br />
+            And looked down one as far as I could<br />
+            To where it bent in the undergrowth;<br />
+          </p>
+
+          <p>
+            Then took the other, as just as fair,<br />
+            And having perhaps the better claim,<br />
+            Because it was grassy and wanted wear;<br />
+            Though as for that the passing there<br />
+            Had worn them really about the same,<br />
+          </p>
+
+          <p>
+            And both that morning equally lay<br />
+            In leaves no step had trodden black.<br />
+            Oh, I kept the first for another day!<br />
+            Yet knowing how way leads on to way,<br />
+            I doubted if I should ever come back.<br />
+          </p>
+
+          <p>
+            I shall be telling this with a sigh<br />
+            Somewhere ages and ages hence:<br />
+            Two roads diverged in a wood, and I<br />
+            I took the one less traveled by,<br />
+            And that has made all the difference.<br />
+          </p>
+        </div>
+        <div class="col-4"></div>
+      </div>
+    </div>
+  {% else %}
+    <table class="table table-hover">
+      <thead class="thead-light">
+        <th class="text-center" scope="col">#</th>
+        <th class="text-center" scope="col">Name</th>
+        <th class="text-center" scope="col">Email</th>
+        <th class="text-center" scope="col">Dues paid</th>
+        <th class="text-center" scope="col">Unreturned books</th>
+        <th class="text-center" scope="col">Outstanding dues</th>
+        <th class="text-center" scope="col">Update</th>
+        <th class="text-center" scope="col">Unregister</th>
+      </thead>
+      <tbody>
+      {% for member in members %}
+        <tr>
+          <th class="align-middle text-center" scope="row">{{ member.id }}</th>
+          <td class="align-middle">{{ member.name }}</td>
+          <td class="align-middle">{{ member.email }}</td>
+          <td class="align-middle text-center">{{ member.dues_paid }}</div></td>
+          <td class="align-middle text-center">{{ member.unreturned_books|length }}</td>
+          <td class="align-middle text-center">{{ member.outstanding_dues }}</td>
+          <td class="align-middle">
+            <a class="d-flex justify-content-center align-items-center text-decoration-none" href="{{ url_for("members.update_member", id=member.id) }}">
+              <button class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              </button>
+            </a>
+          </td>
+          <td class="align-middle">
+            <form class="d-flex justify-content-center align-items-center text-danger" action="{{ url_for("members.delete_member", id=member.id) }}" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button
+                type="submit"
+                class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0"
+                onclick="return confirm('Are you sure you want to unregister this member?');"
+              >
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if members|length > 0 %}
+    <nav aria-label="Page navigation" class="d-flex justify-content-center">
+      <ul class="pagination pagination-md">
+        {% if current_page > 1 %}
+          <li class="page-item"><a class="page-link" href="{{ url_for("books.list_books", page=current_page-1) }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {% endif %}
+
+        {% for page_number in range(1, total_pages+1) %}
+          {% if page_number == current_page %}
+          <li class="page-item active"><a class="page-link selected" href="{{ url_for("books.list_books", page=page_number) }}">{{ page_number }}</a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for("books.list_books", page=page_number) }}">{{ page_number }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if current_page < total_pages %}
+          <li class="page-item"><a class="page-link" href="{{ url_for("books.list_books", page=current_page+1) }}">Next</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}
+
