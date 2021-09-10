@@ -63,7 +63,11 @@
         <th class="align-middle text-center" scope="row">{{ book.id }}</th>
         <td class="align-middle text-center"><a href="{{ url_for("books.show_book", id=book.id) }}">{{ book.title }}</a></td>
         <td class="align-middle text-center">{{ book.isbn13 }}</td>
-        <td class="align-middle text-center">{{ book.authors }}</td>
+        <td class="align-middle text-center">
+          {% for author in book.authors.split("/") %}
+          <a href="{{ url_for("books.list_books", author=author) }}" class="text-reset">{{ author }}</a>{% if loop.nextitem %}, {% endif %}
+          {% endfor %}
+        </td>
         <td class="align-middle text-center">{{ book.unreturned_stock }}</td>
         <td class="align-middle text-center">{{ book.available_stock }}</td>
         <td class="align-middle text-center">{{ book.total_stock }}</td>
