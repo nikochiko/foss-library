@@ -55,7 +55,7 @@ def list_books():
 
     total_pages = ceil(books_query.count() / books_on_each_page)
 
-    if page > total_pages:
+    if page > 1 and page > total_pages:
         flash(f"Page {page} is out of range", "warning")
 
     search_form = SearchBookForm(request.args)

@@ -23,9 +23,8 @@ def list_members():
     page = request.args.get("page", 1)
     page = int(page)
 
-    if page > total_pages:
-        flash(f"Page {page} is out of range", "error")
-        return redirect("/members/")
+    if page > 1 and page > total_pages:
+        flash(f"Page {page} is out of range", "warning")
 
     # set limit and offset for SQL query
     limit = members_on_each_page

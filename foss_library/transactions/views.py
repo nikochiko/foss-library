@@ -18,7 +18,7 @@ def list_transactions():
     page = int(page)
 
     total_pages = ceil(Transaction.query.count() / transactions_on_each_page)
-    if page > total_pages:
+    if page > 1 and page > total_pages:
         flash(f"Page {page} is out of range", "warning")
 
     limit = transactions_on_each_page
