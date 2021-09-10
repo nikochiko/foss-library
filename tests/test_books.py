@@ -86,6 +86,8 @@ class BaseBooksTestCase(BaseTest):
             "total_stock": 1,
         }
 
+        self.not_found_book_id = 120
+
 
 class TestBookModel(BaseBooksTestCase):
     def test_book_unreturned_stock(self):
@@ -223,3 +225,27 @@ class TestBookViewUpdateBook(BaseBooksTestCase):
         test_book_from_db = Book.query.get(self.test_book_1.id)
         self.assertIsNotNone(test_book_from_db)
         self.assertNotEqual(test_book_from_db.num_pages, "abcdef")
+
+    def test_update_book_404(self):
+        response = self.client.get(
+            url_for("books.update_book", id=self.not_found_book_id)
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+
+class TestBookViewDeleteBook(BaseBooksTestCase):
+    def test_delete_book_valid(self):
+        response = self.client.post(
+            url_for("books.delete_book", id=self.test_book_1.id)
+        )
+
+        self.assertIn(response.status_code, range(200, 400))
+        self.assertIsNone(Book.query.get(self.test_book_1.id))
+
+    def test_delete_book_404(self):
+        response = self.client.post(
+            url_for("books.delete_book", id=self.not_found_book_id)
+        )
+
+        self.assertEqual(response.status_code, 404)
