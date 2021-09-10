@@ -62,8 +62,7 @@ class Transaction(db.Model, CRUDMixin):
 
         # not committing directlyy because we want both of the next updates
         # to be part of a single transaction (for atomicity)
-        with db.session() as db_session:
-            self.member.update(dues_paid=total_dues_paid_by_member, commit=False)
-            self.update(returned_at=db.func.now(), commit=False)
-            db_session.add(self.member, self)
-            db_session.commit()
+        self.member.update(dues_paid=total_dues_paid_by_member, commit=False)
+        self.update(returned_at=db.func.now(), commit=False)
+        db.session.add(self.member, self)
+        db.session.commit()
