@@ -30,4 +30,4 @@ class Member(db.Model, CRUDMixin):
 
     @property
     def can_borrow_new_book(self):
-        return self.outstanding_dues <= 500
+        return self.outstanding_dues <= MAX_OUTSTANDING_DUES
