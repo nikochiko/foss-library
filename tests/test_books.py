@@ -191,7 +191,9 @@ class TestBookViewUpdateBook(BaseBooksTestCase):
     def test_update_book_valid(self):
         form = UpdateBookForm(obj=self.test_book_1)
         pub_datetime = form.publication_date.data
-        form.publication_date.data = datetime.date(pub_datetime.year, pub_datetime.month, pub_datetime.day)
+        form.publication_date.data = datetime.date(
+            pub_datetime.year, pub_datetime.month, pub_datetime.day
+        )
         form.num_pages.data = 42
 
         response = self.client.post(

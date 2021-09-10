@@ -88,7 +88,10 @@ def create_book():
     else:
         status_code = 200
 
-    return render_template("books/create_book.html", form=form, search_form=search_form), status_code
+    return (
+        render_template("books/create_book.html", form=form, search_form=search_form),
+        status_code,
+    )
 
 
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
@@ -113,9 +116,12 @@ def update_book(id):
     else:
         status_code = 200
 
-    return render_template(
-        "books/update_book.html", book=book, form=form, search_form=search_form
-    ), status_code
+    return (
+        render_template(
+            "books/update_book.html", book=book, form=form, search_form=search_form
+        ),
+        status_code,
+    )
 
 
 @blueprint.route("/delete/<int:id>", methods=("POST",))
