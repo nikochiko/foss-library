@@ -9,7 +9,9 @@ class Transaction(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.ForeignKey("books.id", ondelete="SET NULL"), nullable=False)
     book = db.relationship("Book", backref="transactions")
-    member_id = db.Column(db.ForeignKey("members.id", ondelete="SET NULL"), nullable=False)
+    member_id = db.Column(
+        db.ForeignKey("members.id", ondelete="SET NULL"), nullable=False
+    )
     member = db.relationship("Member", backref="transactions")
     borrowed_at = db.Column(db.DateTime, default=db.func.now())
     returned_at = db.Column(db.DateTime, nullable=True, index=True)

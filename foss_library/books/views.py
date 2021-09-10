@@ -8,7 +8,13 @@ from foss_library.exceptions import FOSSLibraryBaseException
 from foss_library.utils import flash_form_errors
 from foss_library.members.models import Member
 from foss_library.transactions.models import Transaction
-from .forms import InitiateBookReturnForm, IssueBookForm, CreateBookForm, SearchBookForm, UpdateBookForm
+from .forms import (
+    InitiateBookReturnForm,
+    IssueBookForm,
+    CreateBookForm,
+    SearchBookForm,
+    UpdateBookForm,
+)
 from .models import Book
 
 blueprint = Blueprint("books", __name__, url_prefix="/books", static_folder="../static")
@@ -54,7 +60,13 @@ def list_books():
 
     search_form = SearchBookForm(request.args)
 
-    return render_template("books/list_books.html", books=books, current_page=page, total_pages=total_pages, search_form=search_form)
+    return render_template(
+        "books/list_books.html",
+        books=books,
+        current_page=page,
+        total_pages=total_pages,
+        search_form=search_form,
+    )
 
 
 @blueprint.route("/create", methods=("GET", "POST"))
@@ -91,7 +103,9 @@ def update_book(id):
     search_form = SearchBookForm(request.args)
 
     flash_form_errors(form)
-    return render_template("books/update_book.html", book=book, form=form, search_form=search_form)
+    return render_template(
+        "books/update_book.html", book=book, form=form, search_form=search_form
+    )
 
 
 @blueprint.route("/delete/<int:id>", methods=("POST",))
@@ -115,7 +129,13 @@ def show_book(id):
     return_form = InitiateBookReturnForm(obj=book)
     search_form = SearchBookForm(request.args)
 
-    return render_template("books/show_book.html", book=book, issue_form=issue_form, return_form=return_form, search_form=search_form)
+    return render_template(
+        "books/show_book.html",
+        book=book,
+        issue_form=issue_form,
+        return_form=return_form,
+        search_form=search_form,
+    )
 
 
 @blueprint.route("/issue/<int:id>", methods=("POST",))
@@ -128,7 +148,10 @@ def issue_book(id):
         member_id = form.member_id.data
         member = Member.query.get(member_id)
         if member is None:
-            flash(f"Member with ID {member_id} doesn't exist. Please check your input", "warning")
+            flash(
+                f"Member with ID {member_id} doesn't exist. Please check your input",
+                "warning",
+            )
             return redirect(url_for("books.show_book", id=id))
 
         try:
@@ -153,10 +176,15 @@ def initiate_book_return(id):
         member_id = form.member_id.data
         member = Member.query.get(member_id)
         if member is None:
-            flash(f"Member with ID {member_id} doesn't exist. Please check your input", "warning")
+            flash(
+                f"Member with ID {member_id} doesn't exist. Please check your input",
+                "warning",
+            )
             return redirect(url_for("books.show_book", id=id))
 
-        txn = Transaction.query.filter_by(member=member, book=book, returned_at=None).first()
+        txn = Transaction.query.filter_by(
+            member=member, book=book, returned_at=None
+        ).first()
         if txn is None:
             flash(f"Member with ID {member_id} hasn't borrowed this book.")
             return redirect(url_for("books.show_book", id=id))

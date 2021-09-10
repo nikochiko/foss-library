@@ -6,6 +6,7 @@ from wtforms.validators import InputRequired
 from foss_library.utils import UniqueCheck
 from .models import Member
 
+
 class MemberForm(FlaskForm):
     _model = Member
 

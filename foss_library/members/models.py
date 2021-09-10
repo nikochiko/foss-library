@@ -23,7 +23,8 @@ class Member(db.Model, CRUDMixin):
     def outstanding_dues(self):
         """Outstanding dues of this member"""
         txns = Transaction.query.filter_by(
-            member_id=self.id, returned_at=None,
+            member_id=self.id,
+            returned_at=None,
         ).all()
         return sum(txn.dues for txn in txns)
 

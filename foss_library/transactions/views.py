@@ -5,7 +5,9 @@ from sqlalchemy import desc
 
 from .models import Transaction
 
-blueprint = Blueprint("transactions", __name__, url_prefix="/transactions", static_folder="../static")
+blueprint = Blueprint(
+    "transactions", __name__, url_prefix="/transactions", static_folder="../static"
+)
 
 
 @blueprint.route("/", methods=("GET",))
@@ -22,15 +24,27 @@ def list_transactions():
     limit = transactions_on_each_page
     offset = (page - 1) * transactions_on_each_page
 
-    transactions = Transaction.query.order_by(desc(Transaction.updated_at)).limit(limit).offset(offset).all()
+    transactions = (
+        Transaction.query.order_by(desc(Transaction.updated_at))
+        .limit(limit)
+        .offset(offset)
+        .all()
+    )
 
-    return render_template("transactions/list_transactions.html", transactions=transactions, current_page=page, total_pages=total_pages)
+    return render_template(
+        "transactions/list_transactions.html",
+        transactions=transactions,
+        current_page=page,
+        total_pages=total_pages,
+    )
 
 
 @blueprint.route("/<int:id>/show", methods=("GET",))
 def show_transaction(id):
     transaction = Transaction.query.get_or_404(id)
-    return render_template("transactions/show_transaction.html", transaction=transaction)
+    return render_template(
+        "transactions/show_transaction.html", transaction=transaction
+    )
 
 
 @blueprint.route("/<int:id>/return_book", methods=("POST",))

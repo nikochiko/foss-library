@@ -8,7 +8,9 @@ from foss_library.utils import flash_form_errors
 from .forms import CreateMemberForm, UpdateMemberForm
 from .models import Member
 
-blueprint = Blueprint("members", __name__, url_prefix="/members", static_folder="../static")
+blueprint = Blueprint(
+    "members", __name__, url_prefix="/members", static_folder="../static"
+)
 
 
 @blueprint.route("/", methods=("GET",))
@@ -30,8 +32,15 @@ def list_members():
     limit = members_on_each_page
     offset = (page - 1) * members_on_each_page
 
-    members = Member.query.order_by(desc(Member.updated_at)).limit(limit).offset(offset).all()
-    return render_template("members/list_members.html", members=members, current_page=page, total_pages=total_pages)
+    members = (
+        Member.query.order_by(desc(Member.updated_at)).limit(limit).offset(offset).all()
+    )
+    return render_template(
+        "members/list_members.html",
+        members=members,
+        current_page=page,
+        total_pages=total_pages,
+    )
 
 
 @blueprint.route("/create", methods=("GET", "POST"))
@@ -47,6 +56,7 @@ def create_member():
 
     flash_form_errors(form)
     return render_template("members/create_member.html", form=form)
+
 
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
 @get_model_instance_from_id(Member)

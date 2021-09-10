@@ -46,7 +46,8 @@ async def import_data():
             flash("No results found for given search params", "danger")
         else:
             flash(
-                f"Got {total_results} results from API. Imported {added_count} books, {duplicates_count} were duplicates", "success"
+                f"Got {total_results} results from API. Imported {added_count} books, {duplicates_count} were duplicates",
+                "success",
             )
 
         return render_template("import_data/import_data.html", form=form)

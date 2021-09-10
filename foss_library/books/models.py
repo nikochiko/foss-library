@@ -49,7 +49,9 @@ class Book(db.Model, CRUDMixin):
     @property
     def unreturned_stock(self):
         """Number of unreturned books"""
-        unreturned_books = Transaction.query.filter_by(book_id=self.id, returned_at=None).count()
+        unreturned_books = Transaction.query.filter_by(
+            book_id=self.id, returned_at=None
+        ).count()
         return unreturned_books
 
     @property

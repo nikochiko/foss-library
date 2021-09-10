@@ -79,7 +79,9 @@ async def get_data_by_page(
     params = params.copy()
 
     params.update(page=page)
-    async with session.get(FRAPPE_API_URL, params=params, raise_for_status=True) as response:
+    async with session.get(
+        FRAPPE_API_URL, params=params, raise_for_status=True
+    ) as response:
         response_data = await response.json()
 
     return response_data["message"]

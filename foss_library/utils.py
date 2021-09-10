@@ -13,7 +13,10 @@ class UniqueCheck:
         if not hasattr(form, "_model"):
             raise Exception("Expected form to have a _model attribute")
 
-        if form._model.query.filter_by(**{field.name: field.data}).limit(1).count() == 1:
+        if (
+            form._model.query.filter_by(**{field.name: field.data}).limit(1).count()
+            == 1
+        ):
             message = self.message % {
                 "modelname": form._model.__name__,
                 "fieldname": field.label.text,
