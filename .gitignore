@@ -139,3 +139,5 @@ cython_debug/
 
 # node modules
 node_modules/
+
+.testing.env

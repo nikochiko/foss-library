@@ -6,9 +6,14 @@ Can be set via environment variables, or a .env file
 from environs import Env
 
 env = Env()
-env.read_env()
 
 ENV = env.str("FLASK_ENV", default="production")
+
+if ENV.lower() == "testing":
+    env.read_env("foss_library/testing.env")
+else:
+    env.read_env()
+
 DEBUG = ENV == "development"
 SQLALCHEMY_DATABASE_URI = env.str("DATABASE_URL")
 SECRET_KEY = env.str("SECRET_KEY")
@@ -17,3 +22,8 @@ DEBUG_TB_ENABLED = DEBUG
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 CACHE_TYPE = "simple"  # Can be "memcached", "redis", etc.
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+if ENV.lower() == "testing":
+    assert SQLALCHEMY_DATABASE_URI.endswith(
+        "_test"
+    ), "DATABASE_URL should end in _test in testing environment"
