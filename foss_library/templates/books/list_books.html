@@ -61,7 +61,7 @@
       {% for book in books %}
       <tr>
         <th class="align-middle text-center" scope="row">{{ book.id }}</th>
-        <td class="align-middle text-center"><a href="{{ url_for("books.show_book", id=book.id) }}">{{ book.title }}</a></td>
+        <td class="align-middle text-center"><a class="text-reset" href="{{ url_for("books.show_book", id=book.id) }}">{{ book.title }}</a></td>
         <td class="align-middle text-center">{{ book.isbn13 }}</td>
         <td class="align-middle text-center">
           {% for author in book.authors.split("/") %}
