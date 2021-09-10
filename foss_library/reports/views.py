@@ -1,11 +1,18 @@
 from math import ceil
 
-from flask import Blueprint, flash, render_template, request
+from flask import (
+    Blueprint,
+    flash,
+    render_template,
+    request,
+    send_file,
+)
 
 from foss_library.database import db
 from foss_library.books.models import Book
 from foss_library.members.models import Member
 from foss_library.transactions.models import Transaction
+from .helpers import render_jinja_to_pdf
 
 
 blueprint = Blueprint(
@@ -48,7 +55,8 @@ def most_popular_books_report():
     most_popular_books_query = get_most_popular_books_query()
     most_popular_books = most_popular_books_query.limit(limit).offset(offset).all()
 
-    total_pages = ceil(most_popular_books_query.count() / on_each_page)
+    total_count = most_popular_books_query.count()
+    total_pages = ceil(total_count / on_each_page)
 
     if page > total_pages:
         flash(f"Page {page} is out of range", "warning")
@@ -59,6 +67,7 @@ def most_popular_books_report():
         current_page=page,
         total_pages=total_pages,
         offset=offset,
+        total_count=total_count,
     )
 
 
@@ -89,3 +98,21 @@ def highest_paying_customers_report():
         total_pages=total_pages,
         offset=offset,
     )
+
+
+@blueprint.route("/most-popular-books/download")
+def download_most_popular_books_report():
+    query = get_most_popular_books_query()
+    books = query.all()
+
+    total_count = len(books)
+    offset = 0
+    output_path = render_jinja_to_pdf(
+        "reports/most_popular_books_report_partial.html",
+        "most_popular_books_report_",
+        most_popular_books=books,
+        offset=offset,
+        total_count=total_count,
+    )
+
+    return send_file(output_path)
