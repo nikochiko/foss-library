@@ -10,6 +10,7 @@ def get_model_instance_from_id(model):
 
     It renders a 404 page if the instance was not found
     """
+
     def actual_decorator(func):
         @wraps(func)
         def wrapper(id, *args, **kwargs):
@@ -18,5 +19,7 @@ def get_model_instance_from_id(model):
                 return render_template("404.html"), 404
 
             return func(obj, *args, **kwargs)
+
         return wrapper
+
     return actual_decorator
