@@ -1,0 +1,48 @@
+<div class="container justify-elements-center mx-auto my-2">
+
+  <div class="mb-2">
+    <h1 class="fs-3">Highest paying customers</h1>
+    {% if total_count is defined %}
+    <p class="text-muted">{{ total_count }} results in this report</p>
+    {% endif %}
+  </div>
+
+  <table class="table">
+
+    <thead>
+      <th class="align-middle text-center" scope="col">Rank</th>
+      <th class="align-middle text-center" scope="col">Member ID</th>
+      <th class="align-middle text-center" scope="col">Name</th>
+      <th class="align-middle text-center" scope="col">Email</th>
+      <th class="align-middle text-center" scope="col">Dues paid</th>
+    </thead>
+
+    <tbody>
+
+      {% for member in highest_paying_customers %}
+      <tr>
+        <th class="align-middle text-center" scope="row">
+          {{ offset + loop.index }}
+        </th>
+        <td class="align-middle text-center" scope="row">
+          {{ member.id }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ member.name }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ member.email }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          ₹{{ member.dues_paid }}
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+

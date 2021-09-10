@@ -22,7 +22,7 @@ blueprint = Blueprint(
 
 def get_most_popular_books_query():
     most_popular_books_query = (
-        Book.query.join(Transaction, Book.id == Transaction.book_id, full=True)
+        Book.query.join(Transaction, Book.id == Transaction.book_id)
         .add_columns(db.text(f"count({Transaction.__tablename__}.id) as popularity"))
         .order_by(db.text("popularity desc"))
         .group_by(Book.id)
@@ -71,6 +71,24 @@ def most_popular_books_report():
     )
 
 
+@blueprint.route("/most-popular-books/download/")
+def download_most_popular_books_report():
+    query = get_most_popular_books_query()
+    books = query.all()
+
+    total_count = len(books)
+    offset = 0
+    output_path = render_jinja_to_pdf(
+        "reports/most_popular_books_report_partial.html",
+        "most_popular_books_report_",
+        most_popular_books=books,
+        offset=offset,
+        total_count=total_count,
+    )
+
+    return send_file(output_path)
+
+
 @blueprint.route("/highest-paying-customers/")
 def highest_paying_customers_report():
     on_each_page = 20
@@ -86,7 +104,8 @@ def highest_paying_customers_report():
     query = get_highest_paying_customers_query()
     highest_paying_customers = query.limit(limit).offset(offset).all()
 
-    total_pages = ceil(query.count() / on_each_page)
+    total_count = query.count()
+    total_pages = ceil(total_count / on_each_page)
 
     if page > total_pages:
         flash(f"Page {page} is out of range", "warning")
@@ -97,20 +116,21 @@ def highest_paying_customers_report():
         current_page=page,
         total_pages=total_pages,
         offset=offset,
+        total_count=total_count,
     )
 
 
-@blueprint.route("/most-popular-books/download")
-def download_most_popular_books_report():
-    query = get_most_popular_books_query()
-    books = query.all()
+@blueprint.route("/highest-paying-customers/download/")
+def download_highest_paying_customers_report():
+    query = get_highest_paying_customers_query()
+    customers = query.all()
 
-    total_count = len(books)
+    total_count = len(customers)
     offset = 0
     output_path = render_jinja_to_pdf(
-        "reports/most_popular_books_report_partial.html",
-        "most_popular_books_report_",
-        most_popular_books=books,
+        "reports/highest_paying_customers_report_partial.html",
+        "highest_paying_customers_report_",
+        highest_paying_customers=customers,
         offset=offset,
         total_count=total_count,
     )

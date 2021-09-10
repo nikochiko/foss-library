@@ -2,52 +2,20 @@
 {% block content %}
 <div class="container d-flex my-2">
   <h1 class="fs-2 me-auto">Reports 📈</h1>
+  <a class="d-flex justify-content-end text-reset text-decoration-none" href="{{ request.path }}/download/" target="_blank">
+    <button class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+      </svg>
+      Download as PDF
+    </button>
+  </a>
 </div>
 
 <hr />
 
-<div class="container justify-elements-center mx-auto my-2">
-
-  <h1 class="fs-3">Highest paying customers</h1>
-
-  <table class="table">
-
-    <thead>
-      <th class="align-middle text-center" scope="col">Rank</th>
-      <th class="align-middle text-center" scope="col">Member ID</th>
-      <th class="align-middle text-center" scope="col">Name</th>
-      <th class="align-middle text-center" scope="col">Email</th>
-      <th class="align-middle text-center" scope="col">Dues paid</th>
-    </thead>
-
-    <tbody>
-
-      {% for member in highest_paying_customers %}
-      <tr>
-        <th class="align-middle text-center" scope="row">
-          {{ offset + loop.index }}
-        </th>
-        <td class="align-middle text-center" scope="row">
-          {{ member.id }}
-        </td>
-
-        <td class="align-middle text-center" scope="row">
-          {{ member.name }}
-        </td>
-
-        <td class="align-middle text-center" scope="row">
-          {{ member.email }}
-        </td>
-
-        <td class="align-middle text-center" scope="row">
-          ₹{{ member.dues_paid }}
-        </td>
-
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+{% include "reports/highest_paying_customers_report_partial.html" %}
 
 <nav aria-label="Page navigation" class="d-flex justify-content-center">
   <ul class="pagination pagination-md">
