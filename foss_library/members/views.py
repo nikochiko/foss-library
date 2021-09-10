@@ -55,7 +55,12 @@ def create_member():
         return redirect("/members/")
 
     flash_form_errors(form)
-    return render_template("members/create_member.html", form=form)
+    if form.errors:
+        status_code = 400
+    else:
+        status_code = 200
+
+    return render_template("members/create_member.html", form=form), status_code
 
 
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
@@ -70,7 +75,12 @@ def update_member(member):
         return redirect("/members/")
 
     flash_form_errors(form)
-    return render_template("members/update_member.html", form=form)
+    if form.errors:
+        status_code = 400
+    else:
+        status_code = 200
+
+    return render_template("members/update_member.html", form=form), status_code
 
 
 @blueprint.route("/delete/<int:id>", methods=("POST",))

@@ -52,7 +52,7 @@ def return_book(id):
     transaction = Transaction.query.get_or_404(id)
     if transaction.is_completed:
         flash("Book has already been returned", "warning")
-        return redirect(url_for("transactions.show_transaction", id=id))
+        return redirect(url_for("transactions.show_transaction", id=id)), 400
 
     transaction.return_book_and_pay_dues()
     flash("Book has been returned successfully", "success")

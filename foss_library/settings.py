@@ -24,6 +24,7 @@ CACHE_TYPE = "simple"  # Can be "memcached", "redis", etc.
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 if ENV.lower() == "testing":
+    WTF_CSRF_ENABLED = False
     assert SQLALCHEMY_DATABASE_URI.endswith(
         "_test"
     ), "DATABASE_URL should end in _test in testing environment"

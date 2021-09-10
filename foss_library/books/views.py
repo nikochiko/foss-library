@@ -83,7 +83,12 @@ def create_book():
     search_form = SearchBookForm(request.args)
 
     flash_form_errors(form)
-    return render_template("books/create_book.html", form=form, search_form=search_form)
+    if form.errors:
+        status_code = 400
+    else:
+        status_code = 200
+
+    return render_template("books/create_book.html", form=form, search_form=search_form), status_code
 
 
 @blueprint.route("/update/<int:id>", methods=("GET", "POST"))
@@ -103,9 +108,14 @@ def update_book(id):
     search_form = SearchBookForm(request.args)
 
     flash_form_errors(form)
+    if form.errors:
+        status_code = 400
+    else:
+        status_code = 200
+
     return render_template(
         "books/update_book.html", book=book, form=form, search_form=search_form
-    )
+    ), status_code
 
 
 @blueprint.route("/delete/<int:id>", methods=("POST",))
@@ -152,13 +162,13 @@ def issue_book(id):
                 f"Member with ID {member_id} doesn't exist. Please check your input",
                 "warning",
             )
-            return redirect(url_for("books.show_book", id=id))
+            return redirect(url_for("books.show_book", id=id)), 400
 
         try:
             book.issue_to(member)
         except FOSSLibraryBaseException as e:
             flash(str(e), "danger")
-            return redirect(url_for("books.show_book", id=id))
+            return redirect(url_for("books.show_book", id=id)), 400
 
         flash("Book has been issued", "success")
         return redirect(url_for("books.show_book", id=id))
@@ -180,17 +190,22 @@ def initiate_book_return(id):
                 f"Member with ID {member_id} doesn't exist. Please check your input",
                 "warning",
             )
-            return redirect(url_for("books.show_book", id=id))
+            return redirect(url_for("books.show_book", id=id)), 400
 
         txn = Transaction.query.filter_by(
             member=member, book=book, returned_at=None
         ).first()
         if txn is None:
             flash(f"Member with ID {member_id} hasn't borrowed this book.")
-            return redirect(url_for("books.show_book", id=id))
+            return redirect(url_for("books.show_book", id=id)), 400
 
-        return redirect(url_for("transactions.show_transaction", id=txn.id))
+        return redirect(url_for("transactions.show_transaction", id=txn.id)), 400
 
     else:
         flash_form_errors(form)
-        return redirect(url_for("books.show_book", id=id))
+        if form.errors:
+            status_code = 400
+        else:
+            status_code = 200
+
+        return redirect(url_for("books.show_book", id=id)), status_code
