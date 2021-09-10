@@ -40,7 +40,7 @@ def list_reports():
     return render_template("reports/list_reports.html")
 
 
-@blueprint.route("/most-popular-books")
+@blueprint.route("/most-popular-books/")
 def most_popular_books_report():
     on_each_page = 20
 
@@ -71,7 +71,7 @@ def most_popular_books_report():
     )
 
 
-@blueprint.route("/highest-paying-customers")
+@blueprint.route("/highest-paying-customers/")
 def highest_paying_customers_report():
     on_each_page = 20
 
