@@ -9,7 +9,6 @@ from foss_library.books.forms import CreateBookForm, UpdateBookForm
 from .base import BaseTest
 
 
-
 class BaseBooksTestCase(BaseTest):
     def setUp(self):
         super().setUp()
@@ -54,9 +53,11 @@ class BaseBooksTestCase(BaseTest):
                 "total_stock": 10,
                 "created_at": datetime.datetime(2021, 9, 10, 14, 34, 40, 671296),
             }
-        ) 
+        )
 
-        self.test_member_1 = Member.create(**{"name": "test name", "email": "test@example.com"})
+        self.test_member_1 = Member.create(
+            **{"name": "test name", "email": "test@example.com"}
+        )
 
         self.test_book_3_kwargs = {
             "isbn": "1234567890",
@@ -68,6 +69,20 @@ class BaseBooksTestCase(BaseTest):
             "title": "The Hitchhiker's Tests",
             "num_pages": 215,
             "publication_date": datetime.date(2004, 8, 3),
+            "total_stock": 1,
+        }
+
+        self.test_book_invalid_kwargs = {
+            "isbn": "1234567891",
+            "isbn13": "1234567890124",
+            "authors": "Test Author",
+            "language_code": "eng",
+            "publisher_name": "Crown",
+            "rent_per_day": 1,
+            "title": "The Hitchhiker's Tests",
+            "num_pages": 215,
+            # removing publication_date will make it invalid
+            # "publication_date": datetime.date(2004, 8, 3),
             "total_stock": 1,
         }
 
@@ -118,6 +133,7 @@ class TestBookModel(BaseBooksTestCase):
 
         self.test_book_2.issue_to(self.test_member_1)
 
+
 class TestBookViewListBooks(BaseBooksTestCase):
     def test_list_books(self):
         response = self.client.get(url_for("books.list_books"))
@@ -152,3 +168,56 @@ class TestBookViewCreateBook(BaseBooksTestCase):
 
         test_book_from_db = Book.query.filter_by(isbn=test_book_3.isbn).first()
         self.assertIsNotNone(test_book_from_db)
+
+    def test_create_book_get(self):
+        response = self.client.get(url_for("books.create_book"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_book_invalid_get(self):
+        test_book_invalid = Book(**self.test_book_invalid_kwargs)
+        create_form = CreateBookForm(book=test_book_invalid)
+
+        response = self.client.post(url_for("books.create_book"), data=create_form.data)
+
+        self.assertEqual(response.status_code, 400)
+
+        test_book_from_db = Book.query.filter_by(
+            isbn=self.test_book_invalid_kwargs["isbn"]
+        ).first()
+        self.assertIsNone(test_book_from_db)
+
+
+class TestBookViewUpdateBook(BaseBooksTestCase):
+    def test_update_book_valid(self):
+        form = UpdateBookForm(obj=self.test_book_1)
+        pub_datetime = form.publication_date.data
+        form.publication_date.data = datetime.date(pub_datetime.year, pub_datetime.month, pub_datetime.day)
+        form.num_pages.data = 42
+
+        response = self.client.post(
+            url_for("books.update_book", id=self.test_book_1.id), data=form.data
+        )
+
+        self.assertIn(response.status_code, range(200, 400))
+
+        test_book_from_db = Book.query.get(self.test_book_1.id)
+        self.assertIsNotNone(test_book_from_db)
+        self.assertEqual(test_book_from_db.num_pages, 42)
+
+    def test_update_book_get(self):
+        response = self.client.get(url_for("books.update_book", id=self.test_book_1.id))
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_book_invalid_get(self):
+        form = UpdateBookForm(obj=self.test_book_1)
+        form.num_pages.data = "abcdef"
+
+        response = self.client.post(
+            url_for("books.update_book", id=self.test_book_1.id), data=form.data
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+        test_book_from_db = Book.query.get(self.test_book_1.id)
+        self.assertIsNotNone(test_book_from_db)
+        self.assertNotEqual(test_book_from_db.num_pages, "abcdef")
