@@ -1,4 +1,4 @@
-# Frappe Library
+# FOSS Library
 
 CRUD app for managing Books and Members.
 
