@@ -80,8 +80,10 @@
         <div class="col-4"></div>
       </div>
     </div>
+
   {% else %}
-    <table class="table table-hover">
+
+    <table class="table">
       <thead>
         <th class="text-center" scope="col">#</th>
         <th class="text-center" scope="col">Name</th>
@@ -93,14 +95,22 @@
         <th class="text-center" scope="col">Unregister</th>
       </thead>
       <tbody>
+
       {% for member in members %}
+
         <tr>
           <th class="align-middle text-center" scope="row">{{ member.id }}</th>
+
           <td class="align-middle text-center">{{ member.name }}</td>
+
           <td class="align-middle text-center"><a class="text-reset" href="mailto:{{ member.email }}">{{ member.email }}</a></td>
+
           <td class="align-middle text-center">{{ member.dues_paid }}</div></td>
+
           <td class="align-middle text-center">{{ member.unreturned_books|length }}</td>
+
           <td class="align-middle text-center">{{ member.outstanding_dues }}</td>
+
           <td class="align-middle text-center">
             <a class="d-flex justify-content-center align-items-center text-decoration-none" href="{{ url_for("members.update_member", id=member.id) }}">
               <button class="btn btn-link text-reset text-decoration-none d-inline-flex justify-content-center align-items-center px-0">
@@ -111,6 +121,7 @@
               </button>
             </a>
           </td>
+
           <td class="align-middle">
             <form class="d-flex justify-content-center align-items-center text-danger" action="{{ url_for("members.delete_member", id=member.id) }}" method="POST">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -127,7 +138,9 @@
             </form>
           </td>
         </tr>
+
         {% endfor %}
+
       </tbody>
     </table>
   {% endif %}

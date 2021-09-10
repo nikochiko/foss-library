@@ -1,7 +1,6 @@
 from math import ceil
 
 from flask import Blueprint, flash, request, redirect, render_template
-from sqlalchemy import desc
 
 from foss_library.decorators import get_model_instance_from_id
 from foss_library.utils import flash_form_errors
@@ -33,7 +32,7 @@ def list_members():
     offset = (page - 1) * members_on_each_page
 
     members = (
-        Member.query.order_by(desc(Member.updated_at)).limit(limit).offset(offset).all()
+        Member.query.limit(limit).offset(offset).all()
     )
     return render_template(
         "members/list_members.html",
