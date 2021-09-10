@@ -78,7 +78,7 @@ def create_book():
         form.populate_obj(book)
         book.save()
         flash("Book created successfully!", "success")
-        return redirect("/books/")
+        return redirect(url_for("books.list_books"))
 
     search_form = SearchBookForm(request.args)
 
@@ -98,7 +98,7 @@ def update_book(id):
         form.populate_obj(book)
         book.save()
         flash("Book updated successfully!", "success")
-        return redirect("/books/")
+        return redirect(url_for("books.list_books"))
 
     search_form = SearchBookForm(request.args)
 
@@ -117,7 +117,7 @@ def delete_book(id):
 
     book.delete()
     flash("Book deleted successfully!", "success")
-    return redirect("/books/")
+    return redirect(url_for("books.list_books"))
 
 
 @blueprint.route("/show/<int:id>", methods=("GET",))
@@ -161,7 +161,7 @@ def issue_book(id):
             return redirect(url_for("books.show_book", id=id))
 
         flash("Book has been issued", "success")
-        return redirect("books.show_book", id=id)
+        return redirect(url_for("books.show_book", id=id))
 
     return redirect(url_for("books.show_book", id=id))
 
