@@ -10,23 +10,14 @@ os.environ["TESTING"] = "1"
 
 
 class BaseTest(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        with create_app().app_context():
-            upgrade()
-
-    @classmethod
-    def tearDownClass(cls):
-        with create_app().app_context():
-            db.drop_all()
-            db.engine.execute("DROP TABLE alembic_version")
-
     def create_app(self):
         return create_app()
 
     def setUp(self):
-        upgrade()
+        db.create_all()
 
     def tearDown(self):
         db.session.commit()
         db.session.remove()
+
+        db.drop_all()

@@ -8,3 +8,8 @@ class TestPublicViews(BaseTest):
         response = self.client.get(url_for("public.home"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_404(self):
+        response = self.client.get("/notexistentlink")
+
+        self.assertEqual(response.status_code, 404)
