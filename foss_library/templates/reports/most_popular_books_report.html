@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container d-flex my-2">
+  <h1 class="fs-2 me-auto">Reports 📈</h1>
+</div>
+
+<hr />
+
+<div class="container justify-elements-center mx-auto my-2">
+
+  <h1 class="fs-3">Most popular books</h1>
+
+  <table class="table table-striped table-dark">
+    <thead>
+      <th class="align-middle text-center" scope="col">Rank</th>
+      <th class="align-middle text-center" scope="col">Book ID</th>
+      <th class="align-middle text-center" scope="col">Title</th>
+      <th class="align-middle text-center" scope="col">ISBN</th>
+      <th class="align-middle text-center" scope="col">Authors</th>
+      <th class="align-middle text-center" scope="col">Available stock</th>
+      <th class="align-middle text-center" scope="col">Total stock</th>
+      <th class="align-middle text-center" scope="col">Popularity</th>
+    </thead>
+
+    <tbody>
+
+      {% for (book, popularity) in most_popular_books %}
+      <tr>
+        <th class="align-middle text-center" scope="row">
+          {{ offset + loop.index }}
+        </th>
+        <td class="align-middle text-center" scope="row">
+          {{ book.id }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          <a class="text-reset" href="{{ url_for("books.show_book", id=book.id) }}">{{ book.title }}</a>
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ book.isbn }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {% for author in book.authors.split("/") %}
+          <a href="{{ url_for("books.list_books", author=author) }}" class="text-reset">{{ author }}</a>{% if loop.nextitem %}, {% endif %}
+          {% endfor %}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ book.available_stock }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ book.total_stock }}
+        </td>
+
+        <td class="align-middle text-center" scope="row">
+          {{ popularity }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

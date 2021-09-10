@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-from foss_library import books, import_data, members, public, transactions
+from foss_library import books, import_data, members, public, reports, transactions
 from foss_library.extensions import csrf_protect, db, flask_static_digest, migrate
 
 
@@ -27,6 +27,7 @@ def create_app(config_object="foss_library.settings"):
     app.register_blueprint(import_data.views.blueprint)
     app.register_blueprint(members.views.blueprint)
     app.register_blueprint(public.views.blueprint)
+    app.register_blueprint(reports.views.blueprint)
     app.register_blueprint(transactions.views.blueprint)
 
     return app

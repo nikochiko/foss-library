@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container d-flex my-2">
+  <h1 class="fs-2 me-auto">Reports 📈</h1>
+</div>
+
+<hr />
+
+<div class="container d-flex justify-content-center align-items-middle py-2">
+  <table class="table">
+
+    <thead class="thead">
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <th scope="row">1</th>
+        <td><a class="text-reset" href="{{ url_for("reports.most_popular_books_report") }}">Most popular books with their available and total quantity</a></td>
+      </tr>
+
+      <tr>
+        <th scope="row">2</th>
+        <td><a class="text-reset" href="{{ url_for("reports.highest_paying_customers_report") }}">Highest paying customers</a></td>
+      </tr>
+
+    </tbody>
+
+  </table>
+</div>
+{% endblock %}
