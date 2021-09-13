@@ -228,4 +228,70 @@
     </div>
   </div>
 </div>
+
+<div class="container mt-2">
+
+  <h1 class="fs-3">Borrowers</h1>
+
+  <table class="table">
+
+    <thead>
+      <th scope="col">Transaction ID</th>
+      <th scope="col">Borrowed by</th>
+      <th scope="col">Borrowed at</th>
+      <th scope="col">Dues</th>
+      <th scope="col">Accept return</th>
+    </thead>
+
+    <tbody>
+      {# TODO: Add pagination #}
+      {% for transaction in book.transactions %}
+
+      <tr>
+        <th scope="col">
+          <a class="text-reset" href="{{ url_for("transactions.show_transaction", id=transaction.id) }}">
+            {{ transaction.id }}
+          </a>
+        </th>
+
+        <td>
+          {# <a class="text-reset" href="{{ url_for("members.show_member", id=transaction.member.id) }}"> #}
+            {{ transaction.member.name }}
+          {# </a> #}
+        </td>
+
+        <td>
+          {{ transaction.borrowed_at }}
+        </td>
+
+        <td>
+          ₹{{ transaction.dues }}
+        </td>
+
+        <td>
+
+          <form
+            class="form"
+            action="{{ url_for("transactions.return_book", id=transaction.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              onclick="return confirm('Can you confirm that you have received a payment of {{ transaction.dues }} and the book to return?');"
+            >
+              Accept return
+            </button>
+          </form>
+
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+</div>
 {% endblock %}
