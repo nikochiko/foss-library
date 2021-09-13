@@ -22,7 +22,7 @@
         {% if transaction.is_completed %}
         <button class="btn btn-primary" type="submit"disabled>Take return</button>
         {% else %}
-        <button class="btn btn-primary" type="submit" onclick="return confirm('Can you confirm that you have accepted the book and received a paymet of {{ dues }}?');">Take return</button>
+        <button class="btn btn-primary" type="submit" onclick="return confirm('Can you confirm that you have accepted the book and received a payment of {{ transaction.dues }}?');">Take return</button>
         {% endif %}
       </form>
     </div>
