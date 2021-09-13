@@ -246,6 +246,7 @@
     <tbody>
       {# TODO: Add pagination #}
       {% for transaction in book.transactions %}
+      {% if not transaction.is_completed %}
 
       <tr>
         <th scope="col">
@@ -288,6 +289,7 @@
         </td>
       </tr>
 
+      {% endif %}
       {% endfor %}
     </tbody>
 
