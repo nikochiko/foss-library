@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, DecimalField, IntegerField, StringField
+from wtforms import BooleanField, DecimalField, IntegerField, SelectField, StringField
 from wtforms.fields.html5 import DateField, SearchField
 from wtforms.validators import InputRequired, Length, NumberRange, Optional
 
@@ -47,7 +47,7 @@ class SearchBookForm(FlaskForm):
 
 
 class IssueBookForm(FlaskForm):
-    member_id = IntegerField(validators=[InputRequired()])
+    member_id = SelectField("Member name", coerce=int, validate_choice=False)
 
 
 class InitiateBookReturnForm(FlaskForm):

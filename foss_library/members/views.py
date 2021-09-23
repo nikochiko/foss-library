@@ -41,7 +41,7 @@ def list_members():
     )
 
 
-@blueprint.route("/create", methods=("GET", "POST"))
+@blueprint.route("/create/", methods=("GET", "POST"))
 def create_member():
     """Create a new member"""
     form = CreateMemberForm()

@@ -145,6 +145,9 @@ def show_book(id):
     return_form = InitiateBookReturnForm(obj=book)
     search_form = SearchBookForm(request.args)
 
+    members = Member.query.all()
+    issue_form.member_id.choices = [(m.id, m.name) for m in members]
+
     return render_template(
         "books/show_book.html",
         book=book,
@@ -168,17 +171,18 @@ def issue_book(id):
                 f"Member with ID {member_id} doesn't exist. Please check your input",
                 "warning",
             )
-            return redirect(url_for("books.show_book", id=id)), 400
+            return redirect(url_for("books.show_book", id=id))
 
         try:
             book.issue_to(member)
         except FOSSLibraryBaseException as e:
             flash(str(e), "danger")
-            return redirect(url_for("books.show_book", id=id)), 400
+            return redirect(url_for("books.show_book", id=id))
 
         flash("Book has been issued", "success")
         return redirect(url_for("books.show_book", id=id))
 
+    flash_form_errors(form)
     return redirect(url_for("books.show_book", id=id))
 
 

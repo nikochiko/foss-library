@@ -80,9 +80,9 @@
             {{ issue_form.csrf_token }}
 
             <div class="form-group row row-g-2">
-              {{ issue_form.member_id.label("Member ID") }}
+              {{ issue_form.member_id.label }}
               <span class="col col-12">
-                {{ issue_form.member_id(class="form-control", placeholder="123") }}
+                {{ issue_form.member_id(class="form-control") }}
               </span>
 
             </div>
